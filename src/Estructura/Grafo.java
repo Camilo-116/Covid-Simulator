@@ -28,7 +28,6 @@ public class Grafo {
      */
     public Grafo(int typeMask, int num) {
         verticePrimero = iniciarVertices(typeMask, num);
-
         verticePrimero = incluirAristas(verticePrimero);
     }
 
@@ -98,6 +97,11 @@ public class Grafo {
         return vertices;
     }
 
+    /**
+     * Realiza conexiones aleatorias entre vértices, de forma que no se generen bucles ni existan aristas múltiples
+     * @param verticeP Primer elemento de la lista de vertices a manejar
+     * @return Primer elemento de la lista de vertices con las nuevas uniones incluidas
+     */
     private Lista<Vertice> aristasAleatorias(Lista<Vertice> verticeP) {
         Lista<Vertice> vertices = verticeP;
         int limMin, limMax, numArist, vertUnir;
