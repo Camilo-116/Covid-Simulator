@@ -90,7 +90,11 @@ public class Lista<E> implements Iterable<E>{
      * @return Objeto almacenado en el nodo ubicado en la posición i de la lista
      */
     public E getObject(int i) {
-        return object;
+        Lista t = this;
+        for (int j = 0; j < i; j++) {
+            t = t.linkOb;
+        }
+        return (E)t.getObject();
     }
     
     /**
@@ -101,7 +105,17 @@ public class Lista<E> implements Iterable<E>{
         return linkOb;
     }
     
-    
+    public boolean isEmpty(){
+        for (E e : this) {
+            try{
+                if (object.equals(null))
+                    return true;
+            }catch(NullPointerException ex){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public Iterator<E> iterator() {

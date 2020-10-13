@@ -19,8 +19,8 @@ public class Evaluador {
     /**
      * Crea un nuevo Evaluador
      */
-    public Evaluador() {
-        grafo = new Grafo(3, 5);
+    public Evaluador(int typeMask, int numV) {
+        grafo = new Grafo(typeMask, numV);
     }
     
 }

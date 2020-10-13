@@ -21,6 +21,7 @@ public class Visualizador extends javax.swing.JPanel {
      * Creates new form Visualizador
      */
     public Visualizador() {
+        super();
         initComponents();
     }
 
