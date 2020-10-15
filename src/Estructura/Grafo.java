@@ -286,5 +286,13 @@ public class Grafo {
         }
         return false;
     }
-
+    
+    /**
+     * Permite acceder al número de aristas desde cualquier otra clase.
+     * @param vertices Lista con los vIDs de los vertices.
+     * @return 
+     */
+    public int getNumAristas(Lista<Vertice> vertices) {
+        return numAristas(vertices);
+    }
 }
