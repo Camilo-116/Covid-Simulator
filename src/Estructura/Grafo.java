@@ -60,7 +60,8 @@ public class Grafo {
     private Lista<Vertice> incluirAristas(Lista<Vertice> verticeP) {
 
         verticeP = asegurarFConexo(verticeP);
-        verticeP = aristasAleatorias(verticeP);
+        int last_aID = numAristas(verticeP);
+        verticeP = aristasAleatorias(verticeP, last_aID);
 
         return verticeP;
     }
@@ -77,18 +78,19 @@ public class Grafo {
     private Lista<Vertice> asegurarFConexo(Lista<Vertice> verticeP) {
         Lista<Vertice> vertices = verticeP;
         int indices[] = mezclarIndices(vertices);
-        int i = 0, limit = vertices.size() - 1;
+        int i = 0, limit = vertices.size() - 1, aID = 1;
         for (Vertice vertice : vertices) {
             if (i < limit) {
                 if (isBiAlready(vertice.getvID(), indices[i])) {
                     i++;
                     limit++;
-                    vertice.getAristas().add(new Arista(vertice, vertices.getObject(indices[i] - 1), Math.random() * 2 + 0.1));
-                    vertices.getObject(indices[i] - 1).getAristas().add(new Arista(vertices.getObject(indices[i] - 1), vertice, Math.random() * 2 + 0.1));
+                    vertice.getAristas().add(new Arista(vertice, vertices.getObject(indices[i] - 1), Math.random() * 2 + 0.1, aID));
+                    vertices.getObject(indices[i] - 1).getAristas().add(new Arista(vertices.getObject(indices[i] - 1), vertice, Math.random() * 2 + 0.1, aID));
                 } else {
-                    vertice.getAristas().add(new Arista(vertice, vertices.getObject(indices[i] - 1), Math.random() * 2 + 0.1));
-                    vertices.getObject(indices[i] - 1).getAristas().add(new Arista(vertices.getObject(indices[i] - 1), vertice, Math.random() * 2 + 0.1));
+                    vertice.getAristas().add(new Arista(vertice, vertices.getObject(indices[i] - 1), Math.random() * 2 + 0.1, aID));
+                    vertices.getObject(indices[i] - 1).getAristas().add(new Arista(vertices.getObject(indices[i] - 1), vertice, Math.random() * 2 + 0.1, aID));
                 }
+                aID++;
                 i++;
             } else {
                 break;
@@ -98,41 +100,80 @@ public class Grafo {
     }
 
     /**
-     * Realiza conexiones aleatorias entre vértices, de forma que no se generen bucles ni existan aristas múltiples
+     * Realiza conexiones aleatorias entre vértices, de forma que no se generen
+     * bucles ni existan aristas múltiples
+     *
      * @param verticeP Primer elemento de la lista de vertices a manejar
-     * @return Primer elemento de la lista de vertices con las nuevas uniones incluidas
+     * @param last_aID Numero de identificacion de la ultima arista añadida al
+     * grafo
+     * @return Primer elemento de la lista de vertices con las nuevas uniones
+     * incluidas
      */
-    private Lista<Vertice> aristasAleatorias(Lista<Vertice> verticeP) {
+    private Lista<Vertice> aristasAleatorias(Lista<Vertice> verticeP, int last_aID) {
         Lista<Vertice> vertices = verticeP;
         int limMin, limMax, numArist, vertUnir;
-        //Se designa el límite minimo y maxímo de la cantidad de aristas entre dos vértices dependiendo de la cantidad de vértices que se manejarán
-        if (vertices.size() > 0 && vertices.size() <= 15) {
-            limMin = 1;
-            limMax = 3;
+        /**
+         * Se designa el límite minimo y maxímo de la cantidad de aristas entre
+         * dos vértices dependiendo de la cantidad de vértices que se manejarán
+         * El modelo manjea dos límites para la escogencia aleatoria del número
+         * de aristas de cada vértice. Mientras más vértices hayan en el grafo,
+         * mayor será el rango dentro del cual se escogerá el número de aristas
+         * por vertice. -> limMin indica el limite inferior del rango de
+         * aleatoriedad del numero de aristas para el vertice -> limMax indica
+         * el limite superior del rango de aleatoriedad del numero de aristas
+         * para el vértice 
+         * Entre 0 y 4 vertices no se asignan aristas nuevas, puesto que ya hay 
+         * suficientes
+         */
+        if (vertices.size() > 0 && vertices.size() <= 4) {
+            limMin = 0;
+            limMax = 0;
         } else {
-            if (vertices.size() > 15 && vertices.size() <= 60) {
-                limMin = 3;
-                limMax = 6;
+            if (vertices.size() > 4 && vertices.size() <= 15) {
+                limMin = 1;
+                limMax = 3;
             } else {
-                if (vertices.size() > 60 && vertices.size() <= 130) {
-                    limMin = 7;
-                    limMax = 12;
+                if (vertices.size() > 15 && vertices.size() <= 60) {
+                    limMin = 3;
+                    limMax = 7;
                 } else {
-                    limMin = 15;
-                    limMax = (int) Math.floor(Math.random() * 57 + 22);
+                    if (vertices.size() > 60 && vertices.size() <= 130) {
+                        limMin = 8;
+                        limMax = 15;
+                    } else {
+                        limMin = 18;
+                        limMax = (int) Math.floor(Math.random() * 57 + 22);
+                    }
                 }
             }
         }
+        int aID = last_aID + 1;
         for (Vertice vertice : vertices) {
             numArist = (int) Math.floor(Math.random() * (limMax - limMin + 1) + limMin);
             for (int i = 0; i < numArist; i++) {
                 do {
                     vertUnir = (int) Math.floor(Math.random() * vertices.size() + 1);
                 } while (vertUnir == vertice.getvID() || isAlready(vertice.getvID(), vertUnir));
-                vertice.getAristas().add(new Arista(vertice, vertices.getObject(vertUnir-1), Math.random() * 2 + 0.1));
+                vertice.getAristas().add(new Arista(vertice, vertices.getObject(vertUnir - 1), Math.random() * 2 + 0.1, aID));
+                aID++;
             }
         }
         return vertices;
+    }
+
+    /**
+     * Cuenta el número de aristas total que hay entre los vertices del grafo
+     *
+     * @param verticeP Primer elemento de la lista de vertices
+     * @return Entero correspondiente al numero total de aristas que hay entre
+     * los vertices del grafo
+     */
+    private int numAristas(Lista<Vertice> verticeP) {
+        int numAristas = 0;
+        for (Vertice vertice : verticeP) {
+            numAristas = numAristas + vertice.getAristas().size();
+        }
+        return numAristas;
     }
 
     /**
@@ -225,9 +266,11 @@ public class Grafo {
         }
         return false;
     }
-    
+
     /**
-     * Permite conocer si existe una arista que apunte de un Vertice 1 a un Vertice 2
+     * Permite conocer si existe una arista que apunte de un Vertice 1 a un
+     * Vertice 2
+     *
      * @param vID Numero de identificacion del Vertice 1
      * @param indice Numero de identificacion del Vertice 2
      * @return Booleano que indica si existe una arista que apunte de 1 a 2
@@ -236,8 +279,9 @@ public class Grafo {
         Vertice v1 = this.verticePrimero.getObject(vID - 1), v2 = this.verticePrimero.getObject(indice - 1);
         if (!v1.getAristas().isEmpty()) {
             for (Arista arista : v1.getAristas()) {
-                if (arista.getvTerminal().equals(v2)) 
+                if (arista.getvTerminal().equals(v2)) {
                     return true;
+                }
             }
         }
         return false;

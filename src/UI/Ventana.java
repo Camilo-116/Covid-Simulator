@@ -27,6 +27,7 @@ public class Ventana extends javax.swing.JFrame {
      */
     public Ventana() {
         initComponents();
+        // ev = new Evaluador(3, 2);    Esta instanciación del evaluador existe para hacer pruebas con el grafo. Pero en realidad el Evaluador se instancia cuando el usuario decida crear el grafo con un boton de la interfaz
     }
 
     /**
