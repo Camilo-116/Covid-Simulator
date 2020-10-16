@@ -1,2 +1,8 @@
-# Lab02_CamiloCespedes_EduardoRey_LuisaEscobar
-Desarrollo de un Software para la simulación de propagación del covid-19 en una población (datos no reales)
+# CovidTracker 🦠
+## Simulación de contagios de COVID por medio de grafos. 
+Grupo de trabajo: <br />
+👨🏻‍💻 Camilo Cespedes <br />
+👩🏻‍💻 Luisa Escobar <br />
+👨🏻‍💻 Eduardo Rey <br />
+
+## 🛠 Estamos trabajando en ello 🛠
