@@ -286,6 +286,11 @@ public class Grafo {
         }
         return false;
     }
+
+    public Lista<Vertice> getVertices() {
+        return verticePrimero;
+    }
+    
     
     /**
      * Permite acceder al número de aristas desde cualquier otra clase.
