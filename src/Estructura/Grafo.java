@@ -295,4 +295,13 @@ public class Grafo {
     public int getNumAristas(Lista<Vertice> vertices) {
         return numAristas(vertices);
     }
+    /**
+     * permite al resto de las clases conocer el primer vertice del grafo, y por ende la lista de vertices
+     * @return Primer vertice
+     */
+    public Lista<Vertice> getVerticePrimero() {
+        return verticePrimero;
+    }
+    
+    
 }
