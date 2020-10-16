@@ -5,10 +5,12 @@
  */
 package road2covid.pkg19;
 
+import Estructura.Grafo;
 import UI.Ventana;
 
 /**
  * Clase principal
+ *
  * @author Camilo Cespedes, Luisa Escobar, Eduardo Rey
  */
 public class Road2Covid19 {
@@ -17,6 +19,7 @@ public class Road2Covid19 {
      * Ventana de desarrollo del programa
      */
     private static Ventana ventana;
+
     /**
      * @param args the command line arguments
      */
@@ -53,5 +56,5 @@ public class Road2Covid19 {
             }
         });
     }
-    
+
 }

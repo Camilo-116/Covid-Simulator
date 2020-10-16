@@ -5,11 +5,19 @@
  */
 package UI;
 
+import Estructura.Arista;
 import Estructura.Grafo;
 import Estructura.Evaluador;
+import Estructura.Vertice;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import road2covid.pkg19.Lista;
 
 /**
  * Ventana en la cual se visualizará el programa
+ *
  * @author Camilo Cespedes, Luisa Escobar, Eduardo Rey
  */
 public class Ventana extends javax.swing.JFrame {
@@ -22,12 +30,17 @@ public class Ventana extends javax.swing.JFrame {
      * Evaluador de caminos y probabilidades de contagio del grafo
      */
     private Evaluador ev;
+    
+    private Graphics g;
+    private ArrayList<String> ubicaciones;
     /**
      * Crea una nueva Ventana
      */
     public Ventana() {
         initComponents();
-        // ev = new Evaluador(3, 2);    Esta instanciación del evaluador existe para hacer pruebas con el grafo. Pero en realidad el Evaluador se instancia cuando el usuario decida crear el grafo con un boton de la interfaz
+        ubicaciones = new ArrayList();
+        g = jPanel1.getGraphics();
+        ev = new Evaluador();
     }
 
     /**
@@ -39,24 +52,208 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        iniciarGrafo = new javax.swing.JButton();
+        cantidad = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        mask = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel1MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 716, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 364, Short.MAX_VALUE)
+        );
+
+        iniciarGrafo.setText("Graficar");
+        iniciarGrafo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                iniciarGrafoActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Número de vértices:");
+
+        mask.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos con mascarilla", "Ninguno con mascarilla", "Mascarilla aleatoria" }));
+
+        jLabel1.setText("Mascarilla:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(mask, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(34, 34, 34)
+                .addComponent(iniciarGrafo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(mask, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(iniciarGrafo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+    private void iniciarGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarGrafoActionPerformed
+        int typeMask = mask.getSelectedIndex() + 1;
+        if (ev.getGrafo() == null) {
+            ev.setGrafo(new Grafo(typeMask, Integer.parseInt(cantidad.getText())));
+            graficar();
+            System.out.println("");
+        } else {
+            int sw = JOptionPane.showOptionDialog(
+                    null,
+                    "¿Está seguro de borrar el grafo anterior?",
+                    "Selector de opciones",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null, // null para icono por defecto.
+                    null, // null para YES, NO y CANCEL
+                    null);
+            if (sw == 0) {
+                g.clearRect(0, 0, 710, 360);
+                ubicaciones.removeAll(ubicaciones);
+                ev.setGrafo(new Grafo(typeMask, Integer.parseInt(cantidad.getText())));
+                graficar();
+            }
 
+        }
+
+
+    }//GEN-LAST:event_iniciarGrafoActionPerformed
+
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+
+        if (ubicaciones.size() != 0) {
+
+            int cont = 0;
+            for (String u : ubicaciones) {
+
+                int x = (int) (jPanel1.getMousePosition().x / 30);
+                int y = (int) (jPanel1.getMousePosition().y / 30);
+
+                if (x == Integer.parseInt(u.split("-")[0])
+                        && y == Integer.parseInt(u.split("-")[1])) {
+                    graficar();
+                    g.setColor(Color.YELLOW);
+                    for (Arista arista : ev.getGrafo().getVertices().getObject(cont).getAristas()) {
+                        String ubicacion = ubicaciones.get(arista.getvTerminal().getvID() - 1);
+                        int x1 = Integer.parseInt(ubicacion.split("-")[0]) * 30;
+                        int y1 = Integer.parseInt(ubicacion.split("-")[1]) * 30;
+                        g.drawLine(x*30 + 15, y*30 + 15, x1 + 15, y1 + 15);
+                    }
+
+                    break;
+                }
+                cont++;
+            }
+
+        }
+    }//GEN-LAST:event_jPanel1MouseClicked
+
+    public void graficar() {
+        crearUbicaciones(ev.getGrafo().getVertices().size());
+        for (Vertice vertice : ev.getGrafo().getVertices()) {
+
+            g.setColor(java.awt.Color.black);
+
+            String ubicacion = ubicaciones.get(vertice.getvID() - 1);
+
+            int x = (Integer.parseInt(ubicacion.split("-")[0])) * 30;
+            int y = (Integer.parseInt(ubicacion.split("-")[1])) * 30;
+            for (Arista arista : vertice.getAristas()) {
+                ubicacion = ubicaciones.get(arista.getvTerminal().getvID() - 1);
+                int x1 = Integer.parseInt(ubicacion.split("-")[0]) * 30;
+                int y1 = Integer.parseInt(ubicacion.split("-")[1]) * 30;
+                g.drawLine(x + 15, y + 15, x1 + 15, y1 + 15);
+            }
+
+            g.setColor(java.awt.Color.black);
+            g.fillOval(x, y, 30, 30);
+            g.setColor(java.awt.Color.white);
+            String M;
+            if (vertice.isMask()){
+                M = "CM";
+            }else{
+                M = "SM";
+            }
+            g.drawString(M , x + 15, y + 15);
+        }
+    }
+
+    public void crearUbicaciones(int n) {
+        int cont = 0;
+        int altura = jPanel1.getHeight() / 30;
+        int area = jPanel1.getWidth() / 30;
+        int x = 0, y = 0;
+        String ubicacion = "";
+        for (int i = 0; i < n; i++) {
+            do {
+                x = (int) (Math.random() * area);
+                y = (int) (Math.random() * altura);
+                ubicacion = x + "-" + y;
+            } while (comprobarUbicacion(ubicaciones, ubicacion) && x != 0 && y != 0);
+        }
+    }
+
+    public boolean comprobarUbicacion(ArrayList<String> ubicaciones, String ubicacion) {
+        for (String u : ubicaciones) {
+            if (u.equals(ubicacion)) {
+                return true;
+            }
+        }
+        ubicaciones.add(ubicacion);
+        return false;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField cantidad;
+    private javax.swing.JButton iniciarGrafo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JComboBox<String> mask;
     // End of variables declaration//GEN-END:variables
 }

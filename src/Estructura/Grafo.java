@@ -29,6 +29,7 @@ public class Grafo {
     public Grafo(int typeMask, int num) {
         verticePrimero = iniciarVertices(typeMask, num);
         verticePrimero = incluirAristas(verticePrimero);
+        System.out.println("");
     }
 
     /**
@@ -131,11 +132,11 @@ public class Grafo {
         } else {
             if (vertices.size() > 4 && vertices.size() <= 15) {
                 limMin = 1;
-                limMax = 3;
+                limMax = 1;
             } else {
                 if (vertices.size() > 15 && vertices.size() <= 60) {
-                    limMin = 3;
-                    limMax = 7;
+                    limMin = 2;
+                    limMax = 6;
                 } else {
                     if (vertices.size() > 60 && vertices.size() <= 130) {
                         limMin = 8;
@@ -286,11 +287,6 @@ public class Grafo {
         }
         return false;
     }
-
-    public Lista<Vertice> getVertices() {
-        return verticePrimero;
-    }
-    
     
     /**
      * Permite acceder al número de aristas desde cualquier otra clase.
@@ -300,4 +296,15 @@ public class Grafo {
     public int getNumAristas(Lista<Vertice> vertices) {
         return numAristas(vertices);
     }
+    
+    
+    public Lista<Vertice> getVertices() {
+        return verticePrimero;
+    }
+
+    public int[][] getMI() {
+        return MI;
+    }
+    
+    
 }

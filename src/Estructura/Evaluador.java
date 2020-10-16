@@ -28,6 +28,10 @@ public class Evaluador {
     public Evaluador(int typeMask, int numV) {
         grafo = new Grafo(typeMask, numV);
     }
+
+    public Evaluador() {
+    }
+    
     
     /**
      * Genera un contagiado aleatorio.
@@ -102,6 +106,15 @@ public class Evaluador {
         }
         return distancia;
     }
+
+    public Grafo getGrafo() {
+        return grafo;
+    }
+
+    public void setGrafo(Grafo grafo) {
+        this.grafo = grafo;
+    }
+    
     
     // por hacer ignorar mientras
     private Lista<Vertice> getRuta(Vertice noCont, Vertice Cont){
