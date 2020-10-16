@@ -116,10 +116,30 @@ public class Evaluador {
     }
     
     
-    // por hacer ignorar mientras
-    private Lista<Vertice> getRuta(Vertice noCont, Vertice Cont){
-        
-        return null;
-    }
     
+    /**
+     * Genera la matríz de adyacencia/pesos
+     * @param grafo
+     * @return 
+     */
+    public double[][] getMatrizAdy(Grafo grafo){
+        Lista<Vertice> vertices = grafo.getVertices();
+        double[][] ady = new double[vertices.size()][vertices.size()];
+        for (int i = 0; i < vertices.size(); i++) {
+            for (int j = 0; j < vertices.size(); j++) {
+                ady[i][j] = Integer.MAX_VALUE;
+            }
+        }
+        for (Vertice vertice : vertices) {
+            Lista<Arista> aristas = vertice.getAristas();
+            for (Arista arista : aristas) {
+                Vertice origen = arista.getvInicial();
+                Vertice fin = arista.getvTerminal();
+                ady[origen.getvID()][fin.getvID()] = arista.getPeso();
+            }
+        }
+        return ady;
+    } 
+    
+   
 }
