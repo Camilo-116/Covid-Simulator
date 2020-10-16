@@ -105,6 +105,10 @@ public class Lista<E> implements Iterable<E>{
         return linkOb;
     }
     
+    /**
+     * Permite saber si una lista se encuentra vacia 
+     * @return Booleano para el cual true=Lista vacia y false=Lista no vacia
+     */
     public boolean isEmpty(){
         for (E e : this) {
             try{

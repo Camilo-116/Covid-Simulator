@@ -31,13 +31,11 @@ public class Evaluador {
     
     /**
      * Genera un contagiado aleatorio.
-     * @param grafo
-     * @param vertices 
      */
-    private void Contagiar(Grafo grafo, Lista<Vertice> vertices) {
-        int aristas = grafo.getNumAristas(vertices);
+    private void contagioInicial() {
+        int aristas = grafo.getNumAristas(grafo.getVertices());
         int contagiado = (int) Math.random()*aristas +1;
-        for (Vertice vertice : vertices) {
+        for (Vertice vertice : grafo.getVertices()) {
             if (vertice.getvID() == contagiado) {
                 vertice.setContagiado(true);
             }
@@ -50,7 +48,7 @@ public class Evaluador {
      * @param noCont Vertice no contagiado
      * @param conta Vertice contagiado 
      * @param ruta Ruta a la cual se le calcula la probabilidad
-     * @return 
+     * @return Entero correspondiente a la probabilidad de contagio de una ruta
      */
     private int probabilidad(double distancia, Vertice noCont, Vertice conta, Lista<Vertice> ruta){
         distancia = getDistancia(ruta);
@@ -82,9 +80,9 @@ public class Evaluador {
     }
     
     /**
-     * Retorna distancia desde el no contagiado hasta el contagiado en X ruta
+     * Calcula la distancia desde el no contagiado hasta el contagiado en X ruta
      * @param ruta Ruta desde el vertice no contagiado hasta el contagiado
-     * @return 
+     * @return Double correspondiente a la distancia fisica entre dos vertices
      */
     private double getDistancia(Lista<Vertice> ruta){
         Vertice primero = ruta.getObject(0);
