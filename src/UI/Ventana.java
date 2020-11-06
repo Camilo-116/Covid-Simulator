@@ -25,15 +25,19 @@ import road2covid.pkg19.Lista;
 public class Ventana extends javax.swing.JFrame {
 
     /**
-     * Panel en el cual se podrá visualizar el grafo y las interacciones
-     */
-    private Visualizador visualizador;
-    /**
      * Evaluador de caminos y probabilidades de contagio del grafo
      */
     private Evaluador ev;
-
+    /**
+     * Gráficos del panel de dibujo
+     */
     private Graphics g;
+    /**
+     * Indicador de intención, si es verdadero se desea conocer caminos de
+     * riesgo y posibles contagios, si es falso solo se desea saber la dirección
+     * de las aristas de un nodo
+     */
+    private boolean verifRiesgo;
 
     /**
      * Crea una nueva Ventana
@@ -42,13 +46,20 @@ public class Ventana extends javax.swing.JFrame {
         initComponents();
         setVisible(true);
         setLocationRelativeTo(null);
-        setSize(700, 540);
+        setSize(940, 540);
+        setTitle("Road 2 Covid-19");
         g = paneldeDibujo.getGraphics();
         ev = new Evaluador();
+        verifRiesgo = false;
         sig.setVisible(false);
     }
 
+    /**
+     * Actualiza los dibujos en el panel de visualización luego de la
+     * realización de una iteración de contagio
+     */
     public void actualizarGrafo() {
+        paneldeDibujo.setBackground(new java.awt.Color(203, 240, 221));
         for (Vertice vertice : ev.getGrafo().getVertices()) {
             if (vertice.isContagiado()) {
                 g.setColor(Color.red);
@@ -78,15 +89,18 @@ public class Ventana extends javax.swing.JFrame {
     private void initComponents() {
 
         paneldeDibujo = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         iniciarGrafo = new javax.swing.JButton();
         cantidad = new javax.swing.JTextField();
         numV = new javax.swing.JLabel();
         mask = new javax.swing.JComboBox<>();
         masc = new javax.swing.JLabel();
-        iniciar = new javax.swing.JButton();
+        verificarRiesgos = new javax.swing.JButton();
+        iniciarContagio = new javax.swing.JButton();
         sig = new javax.swing.JButton();
         contIteraciones = new javax.swing.JLabel();
         contI = new javax.swing.JTextField();
+        bck = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(758, 477));
@@ -94,6 +108,7 @@ public class Ventana extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        paneldeDibujo.setBackground(new java.awt.Color(203, 240, 221));
         paneldeDibujo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         paneldeDibujo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -105,66 +120,106 @@ public class Ventana extends javax.swing.JFrame {
         paneldeDibujo.setLayout(paneldeDibujoLayout);
         paneldeDibujoLayout.setHorizontalGroup(
             paneldeDibujoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 718, Short.MAX_VALUE)
         );
         paneldeDibujoLayout.setVerticalGroup(
             paneldeDibujoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 364, Short.MAX_VALUE)
         );
 
-        getContentPane().add(paneldeDibujo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 730, -1));
+        getContentPane().add(paneldeDibujo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, -1));
 
-        iniciarGrafo.setText("Graficar");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/logo.png"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 10, -1, -1));
+
+        iniciarGrafo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/botongraficar.png"))); // NOI18N
+        iniciarGrafo.setBorderPainted(false);
+        iniciarGrafo.setContentAreaFilled(false);
+        iniciarGrafo.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/botongraficarmouse.png"))); // NOI18N
         iniciarGrafo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 iniciarGrafoActionPerformed(evt);
             }
         });
-        getContentPane().add(iniciarGrafo, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 397, 112, 36));
-        getContentPane().add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 379, 92, 36));
+        getContentPane().add(iniciarGrafo, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 400, 160, 60));
 
-        numV.setText("Número de vértices:");
-        getContentPane().add(numV, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 382, 133, 31));
+        cantidad.setBackground(new java.awt.Color(203, 240, 221));
+        cantidad.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 24)); // NOI18N
+        cantidad.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        cantidad.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        getContentPane().add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 380, 92, 36));
 
-        mask.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos con mascarilla", "Ninguno con mascarilla", "Mascarilla aleatoria" }));
+        numV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/personas.png"))); // NOI18N
+        getContentPane().add(numV, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, -1, -1));
+
+        mask.setBackground(new java.awt.Color(203, 240, 221));
+        mask.setFont(new java.awt.Font("Microsoft YaHei", 0, 18)); // NOI18N
+        mask.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos se protegen", "Nadie se protege", "Protección aleatoria" }));
         mask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskActionPerformed(evt);
             }
         });
-        getContentPane().add(mask, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 428, -1, -1));
+        getContentPane().add(mask, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 440, -1, -1));
 
-        masc.setText("Mascarilla:");
-        getContentPane().add(masc, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 431, -1, -1));
+        masc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/mascarilla.png"))); // NOI18N
+        getContentPane().add(masc, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 440, -1, 40));
 
-        iniciar.setText("Iniciar Contagio");
-        iniciar.addActionListener(new java.awt.event.ActionListener() {
+        verificarRiesgos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/riesgossin.png"))); // NOI18N
+        verificarRiesgos.setBorderPainted(false);
+        verificarRiesgos.setContentAreaFilled(false);
+        verificarRiesgos.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/riesgoscon.png"))); // NOI18N
+        verificarRiesgos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                iniciarActionPerformed(evt);
+                verificarRiesgosActionPerformed(evt);
             }
         });
-        getContentPane().add(iniciar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 380, 140, 60));
+        getContentPane().add(verificarRiesgos, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 240, 150, 60));
 
-        sig.setText("Siguiente Paso");
+        iniciarContagio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/botoniniciarcontagio.png"))); // NOI18N
+        iniciarContagio.setBorderPainted(false);
+        iniciarContagio.setContentAreaFilled(false);
+        iniciarContagio.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/botoniniciarcontagiocon.png"))); // NOI18N
+        iniciarContagio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                iniciarContagioActionPerformed(evt);
+            }
+        });
+        getContentPane().add(iniciarContagio, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 370, 150, 60));
+
+        sig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/siguientesin.png"))); // NOI18N
+        sig.setBorderPainted(false);
+        sig.setContentAreaFilled(false);
+        sig.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/siguientecon.png"))); // NOI18N
         sig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sigActionPerformed(evt);
             }
         });
-        getContentPane().add(sig, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 390, 120, 40));
+        getContentPane().add(sig, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 370, 150, 60));
 
         contIteraciones.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        contIteraciones.setText("Iteración: ");
-        getContentPane().add(contIteraciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, -1, -1));
+        contIteraciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/iteracion.png"))); // NOI18N
+        getContentPane().add(contIteraciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 450, -1, -1));
 
         contI.setEditable(false);
+        contI.setBackground(new java.awt.Color(203, 240, 221));
         contI.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         contI.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        getContentPane().add(contI, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 450, 80, 30));
+        contI.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        getContentPane().add(contI, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 450, 80, 30));
+
+        bck.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/fondodef.png"))); // NOI18N
+        bck.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(bck, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 540));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Detecta la opción de iniciar un grafo y da la orden de crearlo
+     *
+     * @param evt Evento detectado
+     */
     private void iniciarGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarGrafoActionPerformed
         int typeMask = mask.getSelectedIndex() + 1;
         if (ev.getGrafo() == null) {
@@ -187,7 +242,7 @@ public class Ventana extends javax.swing.JFrame {
                 ev.setGrafo(new Grafo(typeMask, Integer.parseInt(cantidad.getText())));
                 ev.setIteraciones(0);
                 contI.setText("" + ev.getIteraciones());
-                iniciar.setVisible(true);
+                iniciarContagio.setVisible(true);
                 sig.setVisible(false);
                 graficar();
             }
@@ -195,7 +250,12 @@ public class Ventana extends javax.swing.JFrame {
         }
         cantidad.setText("");
     }//GEN-LAST:event_iniciarGrafoActionPerformed
-
+    /**
+     * Detecta la clickear sobre un nodo y da la orden de realizar la acción
+     * correspondiente
+     *
+     * @param evt Evento detectado
+     */
     private void paneldeDibujoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paneldeDibujoMouseClicked
 
         for (Vertice vertice : ev.getGrafo().getVertices()) {
@@ -212,26 +272,45 @@ public class Ventana extends javax.swing.JFrame {
                     g.setColor(Color.red);
                     g.fillOval(x, y, 60, 60);
                     g.setColor(Color.black);
+                    if (vertice.isMask()) {
+                        g.setColor(Color.white);
+                        drawMask(x, y);
+                    }
                     g.drawString("" + vertice.getvID(), vertice.getPosX() * 60 + 25, vertice.getPosY() * 60 + 25);
                     StringBuffer sb = new StringBuffer("");
-                    for (Arista arista : vertice.getAristas()) {
-                        if (!arista.getvTerminal().isContagiado()) {
-                            sb.append(arista.getvTerminal().getvID() + ", ");
+                    if (verifRiesgo) {
+                        if (!ev.getGrafo().isAllInfected()) {
+                            for (Arista arista : vertice.getAristas()) {
+                                if (!arista.getvTerminal().isContagiado()) {
+                                    sb.append(arista.getvTerminal().getvID() + ", ");
+                                }
+                            }
+                            JOptionPane.showMessageDialog(null, "La persona " + vertice.getvID() + " puede contagiar a las personas: " + sb, "Información de riesgo", 0);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Esta persona no puede contagiar a nadie \n¡Ya todos están contagiados!");
                         }
                     }
-                    JOptionPane.showMessageDialog(null, "El nodo " + vertice.getvID() + " puede contagiar a los nodos " + sb);
                 } else {
                     g.setColor(Color.GREEN);
                     g.fillOval(x, y, 60, 60);
+                    if (vertice.isMask()) {
+                        g.setColor(Color.white);
+                        drawMask(x, y);
+                    }
                     g.setColor(Color.black);
                     g.drawString("" + vertice.getvID(), vertice.getPosX() * 60 + 25, vertice.getPosY() * 60 + 25);
                     Lista<Vertice> camino = MayorRiesgo.FWarshall(ev.getGrafo().getMA(), ev.getGrafo(), vertice);
                     StringBuffer sb = new StringBuffer("");
-                    if (camino != null) {
+                    if (camino != null && verifRiesgo) {
+                        int contV = 0;
                         for (Vertice vertice1 : camino) {
-                            sb.append(vertice1.getvID() + " ");
+                            contV++;
+                            sb.append(vertice1.getvID());
+                            if (contV <= camino.size() - 1) {
+                                sb.append(" --> ");
+                            }
                         }
-                        JOptionPane.showMessageDialog(null, "El camino de mayor riesgo para el nodo " + vertice.getvID() + " es: " + sb);
+                        JOptionPane.showMessageDialog(null, "El camino de mayor riesgo para el individuo " + vertice.getvID() + " es: " + sb, "Información de riesgo", 0);
                     }
                 }
                 if (vertice.isMask()) {
@@ -264,22 +343,31 @@ public class Ventana extends javax.swing.JFrame {
     private void maskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_maskActionPerformed
-
-    private void iniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarActionPerformed
+    /**
+     * Detecta la opción de iniciar los contagios en un grafo y da la orden de
+     * contagiar un vertice aleatorio
+     *
+     * @param evt Evento detectado
+     */
+    private void iniciarContagioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarContagioActionPerformed
         if (ev.getGrafo() != null) {
             Random r = new Random();
             int vID_random = r.nextInt(ev.getGrafo().getVertices().size() - 1) + 1;
             ev.contagiar(vID_random);
             actualizarGrafo();
-            iniciar.setVisible(false);
+            iniciarContagio.setVisible(false);
             sig.setVisible(true);
             ev.setIteraciones(ev.getIteraciones() + 1);
             contI.setText("" + ev.getIteraciones());
         } else {
-            JOptionPane.showMessageDialog(null, "Por favor inicie su grafo antes que nada, \n sino, no hay a quien contagiar", "ERROR", 0);
+            JOptionPane.showMessageDialog(null, "Por favor cree una comunidad antes que nada, \n sino, no hay a quién contagiar", "ERROR", 0);
         }
-    }//GEN-LAST:event_iniciarActionPerformed
-
+    }//GEN-LAST:event_iniciarContagioActionPerformed
+    /**
+     * Detecta la opción de pasar a la siguiente iteración de contagio y da la orden de contagiar a los nodos correspondientes
+     *
+     * @param evt Evento detectado
+     */
     private void sigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sigActionPerformed
         if (ev.getGrafo().isAllInfected()) {
             JOptionPane.showMessageDialog(null, "Lastimosamente, ya todos fueron contagiados.");
@@ -291,8 +379,25 @@ public class Ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sigActionPerformed
 
+    /**
+     * Detecta la opción de alternar entre detectar riesgos de contagio o solo visualizar cuando se clickee un Nodo, y alternar entre falso y verdadero la varriable que representa esta decisión
+     * @param evt Evento detectado
+     */
+    private void verificarRiesgosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verificarRiesgosActionPerformed
+        if (!verifRiesgo) {
+            verifRiesgo = true;
+        } else {
+            verifRiesgo = false;
+        }
+    }//GEN-LAST:event_verificarRiesgosActionPerformed
+
+    /**
+     * Dibuja en el entorno gráfico del panel de visualización los vertices en sus posiciones y relacionados por las aristas correspondientes
+     */
     public void graficar() {
         crearUbicaciones(ev.getGrafo().getVertices().size());
+        g.setColor(new java.awt.Color(203, 240, 221));
+        g.fillRect(2, 2, paneldeDibujo.getWidth() - 3, paneldeDibujo.getHeight() - 3);
         for (Vertice vertice : ev.getGrafo().getVertices()) {
 
             g.setColor(java.awt.Color.black);
@@ -320,6 +425,10 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Inicializa las ubicaciones de cada vertice
+     * @param n Numero de vertices
+     */
     public void crearUbicaciones(int n) {
 
         int altura = paneldeDibujo.getHeight() / 60;
@@ -334,6 +443,12 @@ public class Ventana extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Vertifica que una ubicación en cuestión no esté ocupada por otro vértice
+     * @param x Posocion en X a evaluar
+     * @param y Posicion en Y a evaluar
+     * @return booleano qe indica si la posición en cuestión está ocupada o no
+     */
     public boolean comprobarUbicacion(int x, int y) {
         for (Vertice u : ev.getGrafo().getVertices()) {
             if (u.getPosX() == x && u.getPosY() == y) {
@@ -350,16 +465,19 @@ public class Ventana extends javax.swing.JFrame {
         return false;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel bck;
     private javax.swing.JTextField cantidad;
     private javax.swing.JTextField contI;
     private javax.swing.JLabel contIteraciones;
-    private javax.swing.JButton iniciar;
+    private javax.swing.JButton iniciarContagio;
     private javax.swing.JButton iniciarGrafo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel masc;
     private javax.swing.JComboBox<String> mask;
     private javax.swing.JLabel numV;
     private javax.swing.JPanel paneldeDibujo;
     private javax.swing.JButton sig;
+    private javax.swing.JButton verificarRiesgos;
     // End of variables declaration//GEN-END:variables
 
     private void removeUbicaciones() {

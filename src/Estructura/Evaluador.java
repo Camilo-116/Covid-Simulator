@@ -9,7 +9,7 @@ import road2covid.pkg19.Lista;
 
 
 /**
- * Evaluador de caminos y probabilidades de contagio
+ * Evaluador y manejador de opciones del grafo
  * @author Camilo Cespedes, Luisa Escobar, Eduardo Rey
  */
 public class Evaluador {
@@ -32,6 +32,9 @@ public class Evaluador {
         iteraciones = 0;
     }
 
+    /**
+     * Constructor vacío del evaluador
+     */
     public Evaluador() {
     }
     
@@ -110,49 +113,40 @@ public class Evaluador {
         return distancia;
     }
 
+    /**
+     * Permite acceder al grafo contenido en el evaluador
+     * @return Elemento Grafo contenido
+     */
     public Grafo getGrafo() {
         return grafo;
     }
 
+    /**
+     * Permite acceder al número de iteraciones de contagio que se han efectuado para el grafo generado
+     * @return Eentero correspondiente al número de iteraciones de contagio que se han efectuado para el grafo generado
+     */
     public int getIteraciones() {
         return iteraciones;
     }
 
+    /**
+     * Permite modificar el número de iteraciones de contagio que se han efectuado para el grafo generado
+     */
     public void setIteraciones(int iteraciones) {
         this.iteraciones = iteraciones;
     }
 
-    
+    /**
+     * Permite modificar el grafo generado
+     */
     public void setGrafo(Grafo grafo) {
         this.grafo = grafo;
     }
-    
-    
-    
-    /**
-     * Genera la matríz de adyacencia/pesos
-     * @param grafo
-     * @return 
-     */
-    public double[][] getMatrizAdy(Grafo grafo){
-        Lista<Vertice> vertices = grafo.getVertices();
-        double[][] ady = new double[vertices.size()][vertices.size()];
-        for (int i = 0; i < vertices.size(); i++) {
-            for (int j = 0; j < vertices.size(); j++) {
-                ady[i][j] = Integer.MAX_VALUE;
-            }
-        }
-        for (Vertice vertice : vertices) {
-            Lista<Arista> aristas = vertice.getAristas();
-            for (Arista arista : aristas) {
-                Vertice origen = arista.getvInicial();
-                Vertice fin = arista.getvTerminal();
-                ady[origen.getvID()][fin.getvID()] = arista.getPeso();
-            }
-        }
-        return ady;
-    } 
 
+    /**
+     * Contagia a un vértice identificado con cierto Número de identificación
+     * @param vID_random Numero de identificación del vértice a contagiar
+     */
     public void contagiar(int vID_random) {
         grafo.contagiar(vID_random);
     }

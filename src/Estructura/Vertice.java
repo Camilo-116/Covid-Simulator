@@ -125,22 +125,43 @@ public class Vertice {
         this.contagiado = contagiado;
     }
 
+    /**
+     * Permite acceder a la posición en el eje X del vertice
+     * @return Entero correspondiente a la posición en el eje X del vertice
+     */
     public int getPosX() {
         return posX;
     }
 
+    /**
+     * Permite modificar la posición en X de un vertice
+     * @param posX Nueva posicion en X
+     */
     public void setPosX(int posX) {
         this.posX = posX;
     }
 
+    /**
+     * Permite acceder a la posición en el eje Y del vertice
+     * @return Entero correspondiente a la posición en el eje Y del vertice
+     */
     public int getPosY() {
         return posY;
     }
 
+    /**
+     * Permite modificar la posición en Y de un vertice
+     * @param posY Nueva posicion en Y
+     */
     public void setPosY(int posY) {
         this.posY = posY;
     }
 
+    /**
+     * Verifica si dentro de una lista enlazada de vertices existe un vertice con un determinado numero de identificacion
+     * @param vPrimeroContagiado Lista de vertices dentro de la cual se realizará la busqueda
+     * @return booleano que indica si el vertice se encuentra o no en la lista
+     */
     public boolean isInside(Lista<Contagiado> vPrimeroContagiado) {
         for (Contagiado contagiado : vPrimeroContagiado) {
             if (this.vID == contagiado.getvID())

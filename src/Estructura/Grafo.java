@@ -5,7 +5,6 @@
  */
 package Estructura;
 
-import static java.lang.System.currentTimeMillis;
 import road2covid.pkg19.Lista;
 
 /**
@@ -24,34 +23,24 @@ public class Grafo {
      */
     private Lista<Contagiado> vPrimeroContagiado;
     /**
-     * Primer elemento de la lista de no contagiados
-     */
-    private Lista<NoContagiado> vPrimeroNoContagiado;
-    /**
      * Valor que representa infinito
      */
     public static final long GOES_TO_INF = 9999;
     /**
-     * Matriz de adyacencia del grafo
+     * Matriz de adyacencia/pesos del grafo
      */
     private double MA[][];
 
     /**
-     * Crea un nuevo Grafo
+     * Crea un nuevo grafo
+     * @param typeMask Opción de mascarilla para los vertices del grafo
+     * @param num Numero de vertices del grafo
      */
     public Grafo(int typeMask, int num) {
         verticePrimero = iniciarVertices(typeMask, num);
         verticePrimero = incluirAristas(verticePrimero);
         vPrimeroContagiado = new Lista();
-        vPrimeroNoContagiado = new Lista();
-        vPrimeroNoContagiado = añadirNC(verticePrimero);
         MA = crearMatrizAdyacencia();
-        /*for (int i = 0; i < verticePrimero.size(); i++) {
-            for (int j = 0; j < verticePrimero.size(); j++) {
-                System.out.print(MA[i][j]+" ");
-            }
-            System.out.println();
-        }*/
     }
 
     /**
@@ -242,6 +231,11 @@ public class Grafo {
         return indices;
     }
 
+    /**
+     * Verifica si una generación del vértor de indices mezclados corresponde a una combinación específica de etiquetas
+     * @param indices Vertor de entero que contiene a las etiquetas mezcladas de los vertices
+     * @return Logico que indica si el vector corresponde o no a la combinación
+     */
     public boolean checkCombinacion(int[] indices) {
         int[] combinacion = {2, 1, 4, 3};
         if (indices.length != 4) {
@@ -326,28 +320,32 @@ public class Grafo {
      * Permite acceder al número de aristas desde cualquier otra clase.
      *
      * @param vertices Lista con los vIDs de los vertices.
-     * @return
+     * @return Entero correspondiente al número de aristas de un vertice
      */
     public int getNumAristas(Lista<Vertice> vertices) {
         return numAristas(vertices);
     }
 
+    /**
+     * Permite acceder a la lista de aristas de un vertice del grafo
+     * @return Primer elemento de la lista enlazada de vertices del grafo
+     */
     public Lista<Vertice> getVertices() {
         return verticePrimero;
     }
 
+    /**
+     * Permite acceder a la matriz de Adyacencia/Pesos del grafo
+     * @return Matriz de elementos de tipo double que corresponde a la matriz de Adyacencia/Pesos del grafo
+     */
     public double[][] getMA() {
         return MA;
     }
 
-    private Lista<NoContagiado> añadirNC(Lista<Vertice> verticePrimero) {
-        Lista<NoContagiado> NC = new Lista();
-        for (Vertice vertice : verticePrimero) {
-            vPrimeroNoContagiado.add(new NoContagiado(vertice));
-        }
-        return NC;
-    }
-
+    /**
+     * Contagia a un vertice específico del grafo
+     * @param vID_random Numero de identificación del Vertice a contagiar
+     */
     void contagiar(int vID_random) {
         for (Vertice vertice : verticePrimero) {
             if (vertice.getvID() == vID_random) {
@@ -357,6 +355,9 @@ public class Grafo {
         }
     }
 
+    /**
+     * Ejecuta una iteración de contagio
+     */
     public void contagiar() {
         for (Contagiado contagiado : vPrimeroContagiado) {
             contagiado.infectarAdyacentes();
@@ -368,14 +369,18 @@ public class Grafo {
         }
     }
 
+    /**
+     * Permite acceder a la lista de contagiados del grafo
+     * @return Primer elemento de la lista enlazada de contagiados del grafo
+     */
     public Lista<Contagiado> getContagiados() {
         return vPrimeroContagiado;
     }
 
-    public Lista<NoContagiado> getvPrimeroNoContagiado() {
-        return vPrimeroNoContagiado;
-    }
-
+    /**
+     * Genera la matriz de adyacencia/pesos del grafo
+     * @return Matriz de elementos double que corresponden a los pesos de las aristas entre los vértices
+     */
     private double[][] crearMatrizAdyacencia() {
         double MA[][] = new double[verticePrimero.size()][verticePrimero.size()];
         int i = 0, j = 0;
@@ -399,6 +404,10 @@ public class Grafo {
         return MA;
     }
 
+    /**
+     * Verifica si todos los vertices del grafo están infectados
+     * @return booleano que indica si todos los vertices han sido infectados o no
+     */
     public boolean isAllInfected() {
         for (Vertice vertice : verticePrimero) {
             if (!vertice.isContagiado()) {
@@ -408,6 +417,13 @@ public class Grafo {
         return true;
     }
 
+    /**
+     * Identifica la probabilidad de contagio que hay entre dos vértices específicos
+     * @param vInicial Vertice contagiado
+     * @param vTerminal Vertice no contagiado
+     * @param distancia Peso de la arista que une ambos vertices
+     * @return Valor double que corresponde a la probabilidad de contagio entre los dos vertices evaluados
+     */
     public double probabilidad_entreVertices(Vertice vInicial, Vertice vTerminal, double distancia) {
         double prob;
         if (!vInicial.isMask()) {

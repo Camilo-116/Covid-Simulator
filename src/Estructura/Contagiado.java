@@ -8,15 +8,22 @@ package Estructura;
 import road2covid.pkg19.Lista;
 
 /**
- *
- * @author Camilo Cespedes
+ * Modelo de un vértice contagiado
+ * @author Camilo Cespedes, Luisa Escobar, Eduardo Rey
  */
 public class Contagiado extends Vertice {
 
+    /**
+     * COnstructor de Contagiado, crea un nuevo vértice contagiado
+     * @param vertice Vertice modelo a partir del cual se crea el contagiado
+     */
     public Contagiado(Vertice vertice) {
         super(vertice.getAristas(), vertice.getvID(), vertice.isMask(), vertice.isContagiado());
     }
 
+    /**
+     * Evalúa cada uno de los vertices adyacentes no contagiados del grafo para tomar una decisión de contagio
+     */
     public void infectarAdyacentes() {
         for (Arista arista : this.getAristas()) {
             if (!arista.getvTerminal().isContagiado()) {
@@ -24,7 +31,11 @@ public class Contagiado extends Vertice {
             }
         }
     }
-
+    /**
+     * Toma la decisión de si un vertice contagiará a otro partiendo de la probabilidad de contagio
+     * @param arista Arista que representa la relación entre el vértice contagiado y el vertice sin contagiar
+     * @return 
+     */
     public boolean verificarContagio(Arista arista) {
         double prob;
         if (!arista.getvInicial().isMask()) {
