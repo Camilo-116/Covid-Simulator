@@ -37,9 +37,6 @@ public class Arista {
      * @param peso Peso que se asignará a la arista
      */
     public Arista(Vertice vInicial, Vertice vTerminal, double peso, int aID) {
-        if (vTerminal.equals(vInicial)){
-            System.out.println("Hay ciclo y me valio monda");
-        }
         this.vInicial = vInicial;
         this.vTerminal = vTerminal;
         this.peso = peso;

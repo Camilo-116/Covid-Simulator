@@ -78,7 +78,6 @@ public class MayorRiesgo {
         camino.add(n);
         while (n != destino) {
             n = g.getVertices().getObject(MRFloyd[n.getvID()-1][destino.getvID()-1]);
-            System.out.print(n.getvID() + " ");
             camino.add(n);
         }
         return camino;

@@ -146,14 +146,14 @@ public class Grafo {
             } else {
                 if (vertices.size() > 15 && vertices.size() <= 60) {
                     limMin = 2;
-                    limMax = 6;
+                    limMax = 4;
                 } else {
                     if (vertices.size() > 60 && vertices.size() <= 130) {
-                        limMin = 8;
-                        limMax = 15;
+                        limMin = 5;
+                        limMax = 8;
                     } else {
-                        limMin = 18;
-                        limMax = (int) Math.floor(Math.random() * 57 + 22);
+                        limMin = 10;
+                        limMax = (int) Math.floor(Math.random() * 20 + 15);
                     }
                 }
             }
